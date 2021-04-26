@@ -2,6 +2,9 @@
 
 ## Download 
 
+```bash
+git clone https://github.com/teamallnighter/bassTherapy.git
+```
 
 ## Install 
 
