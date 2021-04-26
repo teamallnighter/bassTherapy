@@ -37,3 +37,5 @@ npm run deploy
 ```bash
 npm run build-deploy
 ```
+
+Deploy to [LIVE SITE](https://basstherapy.netlify.app/)
