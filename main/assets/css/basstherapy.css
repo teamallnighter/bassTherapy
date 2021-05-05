@@ -1,8 +1,11 @@
-.form-wrapper{
-    padding: 10vh 15vw;
+.suicide{
+    color: red;
 }
 
-.get-help-button{
-    color: white;
-    text-decoration: white;
+.our-team{
+    margin-bottom: 10vh;
+}
+
+footer{
+    margin-top: 10vh;
 }

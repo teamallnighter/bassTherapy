@@ -4,7 +4,7 @@
   "scripts": {
     "gulp": "gulp",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "npm run guilp watch",
+    "dev": "npm run gulp watch",
     "build": "npm run gulp sass && npm run gulp scripts && ntl build",
     "deploy": "npm run gulp sass && npm run gulp scripts && ntl deploy --prod",
     "build-deploy": "npm run gulp sass && npm run gulp scripts && ntl build && ntl deploy --prod"
