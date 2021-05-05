@@ -9,3 +9,46 @@
 footer{
     margin-top: 10vh;
 }
+
+.artist-bio{
+    margin-top: 10vh;
+}
+
+.soundcloud-container{
+    margin: 10vh 0vw;;
+    padding: 10vh 20vw;
+}
+
+.youtube-wrapper{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-evenly;
+    flex-wrap: wrap;
+    padding: 0vh 20vw;
+    margin: 15vh 0vw;
+}
+
+.youtube-container{
+    margin: 50px;
+    border: solid #585757;
+    box-shadow: 2px 4px 6px rgba(128, 128, 128, 0.432);
+}
+
+.links-section{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-evenly;
+
+    padding: 0vh 20vw;
+}
+
+.link-icon{
+    font-size: 4rem;
+}
+
+.link-icon:hover{
+    color: var(--color-accent);
+    
+}

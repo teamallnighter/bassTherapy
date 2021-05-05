@@ -33,12 +33,10 @@
           <circle cx="15" cy="15" r="15" fill="var(--color-primary)" />
         </svg>
       </a>
-
       <button class="reset anim-menu-btn js-anim-menu-btn f-header__nav-control js-tab-focus" aria-label="Toggle menu">
         <i class="anim-menu-btn__icon anim-menu-btn__icon--close" aria-hidden="true"></i>
       </button>
     </div>
-
     <div class="f-header__nav" role="navigation">
       <div class="f-header__nav-grid justify-between@md container max-width-lg">
         <div class="f-header__nav-logo-wrapper flex-grow flex-basis-0">
@@ -61,7 +59,6 @@
                 <path d="M6,9l4-5H2Z" />
               </svg>
             </a>
-
             <ul class="f-header__dropdown">
               <li><a class="dropdown__item" href="#0">British Columbia</a></li>
               <li><a class="dropdown__item"
@@ -76,10 +73,19 @@
               <li><a class="dropdown__item" href="#0">Newfoundland and Labrador</a></li>
             </ul>
           </li>
-          <li class="f-header__item"><a href="../artists/index.html" class="f-header__link"
-              aria-current="page">Artists</a>
+          <li class="f-header__item"><a href="#0" class="f-header__link">
+              <span>Content</span>
+              <svg class="f-header__dropdown-icon icon" aria-hidden="true" viewBox="0 0 12 12">
+                <path d="M6,9l4-5H2Z" />
+              </svg>
+            </a>
+            <ul class="f-header__dropdown">
+              <li><a class="dropdown__item" href="#0">Stream</a></li>
+              <li><a class="dropdown__item" href="#0">Music</a></li>
+              <li><a class="dropdown__item" href="#0">Blog</a></li>
+            </ul>
           </li>
-          <li class="f-header__item"><a href="#0" class="f-header__link">Content</a></li>
+          <li class="f-header__item"><a href="../artists/index.html" class="f-header__link">Artists</a></li>
           <li class="f-header__item"><a href="#0" class="f-header__link">Contact</a></li>
         </ul>
 
@@ -117,243 +123,221 @@
           </svg>
         </button>
 
-        <div class="subnav__wrapper js-subnav__wrapper">
-          <nav class="subnav__nav justify-center">
-            <button class="reset subnav__close-btn js-subnav__close-btn js-tab-focus" aria-label="Close navigation">
-              <svg class="icon" viewBox="0 0 16 16">
-                <g stroke-width="1" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"
-                  stroke-miterlimit="10">
-                  <line x1="13.5" y1="2.5" x2="2.5" y2="13.5"></line>
-                  <line x1="2.5" y1="2.5" x2="13.5" y2="13.5"></line>
-                </g>
-              </svg>
-            </button>
 
-            <ul class="subnav__list">
-              <li class="subnav__item"><a href="#0" class="subnav__link" aria-current=page>Intro</a></li>
-              <li class="subnav__item"><a href="#0" class="subnav__link">Features</a></li>
-              <li class="subnav__item"><a href="#0" class="subnav__link">Photos</a></li>
-              <li class="subnav__item"><a href="#0" class="subnav__link">Videos</a></li>
-              <li class="subnav__item"><a href="#0" class="subnav__link">Specs</a></li>
-              <li class="subnav__item"><a href="#0" class="subnav__link">Support</a></li>
-              <li class="subnav__item"><a href="#0" class="subnav__link">Compare</a></li>
-              <li class="subnav__item"><a href="#0" class="subnav__link">Buy</a></li>
-            </ul>
-          </nav>
-        </div>
-      </div>
-    </div>
-  </div>
 
-  <section class="position-relative z-index-1 padding-y-xl">
-    <div class="container max-width-adaptive-lg">
-      <div class="margin-bottom-xl">
-        <h1 class="text-center">Our Artists</h1>
-      </div>
+        <section class="position-relative z-index-1 padding-y-xxl padding-x-xs demo-theme-dark">
+          <div class="container">
+            <div class="margin-bottom-xl">
+              <h1 class="text-center">Our Artists</h1>
+            </div>
 
-      <div class="grid gap-xl">
-        <div class="card-v13 col-4@md">
-          <a class="card-v13__figure-wrapper" href="#0">
-            <figure class="card-v13__figure">
-              <img
-                src="https://scontent.fyyc2-1.fna.fbcdn.net/v/t1.6435-9/131479704_139107821303855_4205275460650438608_n.jpg?_nc_cat=106&ccb=1-3&_nc_sid=174925&_nc_ohc=uATT1elpC8wAX9gdS5R&_nc_ht=scontent.fyyc2-1.fna&oh=efcd71e7c72d4ed449791c7299ed42c9&oe=60B83026"
-                alt="Image description" loading="lazy">
-            </figure>
-          </a>
-
-          <div class="text-center margin-top-sm">
-            <h3 class="text-md">
-              <a class="color-contrast-higher" href="#0">Unnecessary Roughness</a>
-            </h3>
-
-            <div class="card-v13__separator margin-x-auto margin-y-sm" role="presentation"></div>
-
-            <p class="color-contrast-medium text-sm line-height-lg">Heavy and abstract dubstep and trap mixed with pop
-              music</p>
-
-            <div class="margin-top-sm">
-              <button class="reset btn-fx-3 radius-md text-sm">
-                <div class="btn-fx-3__inner padding-y-xs padding-x-md">
-                  <span>Find Out More</span>
-
-                  <figure class="btn-fx-3__icon-wrapper" aria-hidden="true">
-                    <svg class="icon icon--xs" viewBox="0 0 16 16">
-                      <title>calendar-add-event</title>
-                      <g stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M8 11.5h7.5"></path>
-                        <path d="M13 9l2.5 2.5L13 14"></path>
-                        <path d="M.5 5.5h15"></path>
-                        <path d="M15.5 8.5V4A1.5 1.5 0 0 0 14 2.5H2A1.5 1.5 0 0 0 .5 4v9A1.5 1.5 0 0 0 2 14.5h7.5">
-                        </path>
-                        <path d="M4.5.5v2"></path>
-                        <path d="M11.5.5v2"></path>
-                      </g>
-                    </svg>
+            <div class="grid gap-xl">
+              <div class="card-v13 col-4@md">
+                <a class="card-v13__figure-wrapper" href="unnecessary-roughness.html">
+                  <figure class="card-v13__figure">
+                    <img
+                      src="https://scontent.fyyc2-1.fna.fbcdn.net/v/t1.6435-9/131479704_139107821303855_4205275460650438608_n.jpg?_nc_cat=106&ccb=1-3&_nc_sid=174925&_nc_ohc=uATT1elpC8wAX9gdS5R&_nc_ht=scontent.fyyc2-1.fna&oh=efcd71e7c72d4ed449791c7299ed42c9&oe=60B83026"
+                      alt="Image description" loading="lazy">
                   </figure>
+                </a>
+
+                <div class="text-center margin-top-sm">
+                  <h3 class="text-md">
+                    <a class="color-contrast-higher" href="unnecessary-roughness.html">Unnecessary Roughness</a>
+                  </h3>
+
+                  <div class="card-v13__separator margin-x-auto margin-y-sm" role="presentation"></div>
+
+                  <p class="color-contrast-medium text-sm line-height-lg">Heavy and abstract dubstep and trap mixed with
+                    pop music. Bass Therapy founder and mental health warrior</p>
+
+                  <div class="margin-top-sm">
+                    <button class="reset btn-fx-3 radius-md text-sm">
+                      <div class="btn-fx-3__inner padding-y-xs padding-x-md">
+                        <span>Find Out More</span>
+
+                        <figure class="btn-fx-3__icon-wrapper" aria-hidden="true">
+                          <svg class="icon icon--xs" viewBox="0 0 16 16">
+                            <title>calendar-add-event</title>
+                            <g stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                              <path d="M8 11.5h7.5"></path>
+                              <path d="M13 9l2.5 2.5L13 14"></path>
+                              <path d="M.5 5.5h15"></path>
+                              <path
+                                d="M15.5 8.5V4A1.5 1.5 0 0 0 14 2.5H2A1.5 1.5 0 0 0 .5 4v9A1.5 1.5 0 0 0 2 14.5h7.5">
+                              </path>
+                              <path d="M4.5.5v2"></path>
+                              <path d="M11.5.5v2"></path>
+                            </g>
+                          </svg>
+                        </figure>
+                      </div>
+                    </button>
+                  </div>
                 </div>
-              </button>
+              </div>
+
+              <div class="card-v13 col-4@md">
+                <a class="card-v13__figure-wrapper" href="#0">
+                  <figure class="card-v13__figure">
+                    <img src="../assets/media/img/181376695_144262650937479_7684373880929909774_n.jpg"
+                      alt="Image description" loading="lazy">
+                  </figure>
+                </a>
+
+                <div class="text-center margin-top-sm">
+                  <h3 class="text-md">
+                    <a class="color-contrast-higher" href="#0">SVBHERTZ</a>
+                  </h3>
+
+                  <div class="card-v13__separator margin-x-auto margin-y-sm" role="presentation"></div>
+
+                  <p class="color-contrast-medium text-sm line-height-lg">SVBHERTZ has been delivering
+                    deep dubstep to dance floors for over five years </p>
+
+                  <div class="margin-top-sm">
+                    <button class="reset btn-fx-3 radius-md text-sm">
+                      <div class="btn-fx-3__inner padding-y-xs padding-x-md">
+                        <span>Find Out More</span>
+
+                        <figure class="btn-fx-3__icon-wrapper" aria-hidden="true">
+                          <svg class="icon icon--xs" viewBox="0 0 16 16">
+                            <title>calendar-add-event</title>
+                            <g stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                              <path d="M8 11.5h7.5"></path>
+                              <path d="M13 9l2.5 2.5L13 14"></path>
+                              <path d="M.5 5.5h15"></path>
+                              <path
+                                d="M15.5 8.5V4A1.5 1.5 0 0 0 14 2.5H2A1.5 1.5 0 0 0 .5 4v9A1.5 1.5 0 0 0 2 14.5h7.5">
+                              </path>
+                              <path d="M4.5.5v2"></path>
+                              <path d="M11.5.5v2"></path>
+                            </g>
+                          </svg>
+                        </figure>
+                      </div>
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <!--<div class="card-v13 col-4@md">
+                <a class="card-v13__figure-wrapper" href="#0">
+                  <figure class="card-v13__figure">
+                    <img src="../../../app/assets/img/card-v13-img-3.jpg" alt="Image description" loading="lazy">
+                  </figure>
+                </a>
+
+                <div class="text-center margin-top-sm">
+                  <h3 class="text-md">
+                    <a class="color-contrast-higher" href="#0">Mathew Burford</a>
+                  </h3>
+
+                  <div class="card-v13__separator margin-x-auto margin-y-sm" role="presentation"></div>
+
+                  <p class="color-contrast-medium text-sm line-height-lg">Lorem ipsum dolor sit amet consectetur
+                    adipisicing
+                    elit. Earum neque velit.</p>
+
+                  <div class="margin-top-sm">
+                    <button class="reset btn-fx-3 radius-md text-sm">
+                      <div class="btn-fx-3__inner padding-y-xs padding-x-md">
+                        <span>Book Class</span>
+
+                        <figure class="btn-fx-3__icon-wrapper" aria-hidden="true">
+                          <svg class="icon icon--xs" viewBox="0 0 16 16">
+                            <title>calendar-add-event</title>
+                            <g stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                              <path d="M8 11.5h7.5"></path>
+                              <path d="M13 9l2.5 2.5L13 14"></path>
+                              <path d="M.5 5.5h15"></path>
+                              <path
+                                d="M15.5 8.5V4A1.5 1.5 0 0 0 14 2.5H2A1.5 1.5 0 0 0 .5 4v9A1.5 1.5 0 0 0 2 14.5h7.5">
+                              </path>
+                              <path d="M4.5.5v2"></path>
+                              <path d="M11.5.5v2"></path>
+                            </g>
+                          </svg>
+                        </figure>
+                      </div>
+                    </button>
+                  </div>
+                </div>
+              </div>-->
             </div>
           </div>
-        </div>
+        </section>
 
-        <div class="card-v13 col-4@md">
-          <a class="card-v13__figure-wrapper" href="#0">
-            <figure class="card-v13__figure">
-              <img src="../assets/media/img/181376695_144262650937479_7684373880929909774_n.jpg" alt="Image description"
-                loading="lazy">
-            </figure>
-          </a>
 
-          <div class="text-center margin-top-sm">
-            <h3 class="text-md">
-              <a class="color-contrast-higher" href="#0">SVBHERTZ</a>
-            </h3>
+        <!--FOOTER-->
+        <footer class="footer-v4 padding-y-lg">
+          <div class="container max-width-lg">
+            <nav class="footer-v4__nav">
+              <ul class="footer-v4__nav-list">
+                <li class="footer-v4__nav-item"><a href="#0">About Us</a></li>
+                <li class="footer-v4__nav-item"><a href="#0">Resources</a></li>
+                <li class="footer-v4__nav-item"><a href="#0">Artists</a></li>
+                <li class="footer-v4__nav-item"><a href="#0">Content</a></li>
+                <li class="footer-v4__nav-item"><a href="#0">Contact Us</a></li>
+                <li class="footer-v4__nav-item"><a href="#0">Get Help Now</a></li>
+                <li class="footer-v4__nav-item"><a href="#0">Our Story</a></li>
+                <li class="footer-v4__nav-item"><a href="#0">Donate</a></li>
 
-            <div class="card-v13__separator margin-x-auto margin-y-sm" role="presentation"></div>
+              </ul>
+            </nav>
 
-            <p class="color-contrast-medium text-sm line-height-lg">SVBHERTZ has been delivering
-              deep dubstep to dance floors for over five years </p>
+            <div class="footer-v4__logo">
+              <a href="#0">
+                <svg width="104" height="30" viewBox="0 0 104 30">
+                  <title>Go to homepage</title>
+                  <path
+                    d="M37.54 24.08V3.72h4.92v16.37h8.47v4zM60.47 24.37a7.82 7.82 0 01-5.73-2.25 8.36 8.36 0 01-2-5.62 8.32 8.32 0 012.08-5.71 8 8 0 015.64-2.18 8.07 8.07 0 015.68 2.2 8.49 8.49 0 012 5.69 8.63 8.63 0 01-1.78 5.38 7.6 7.6 0 01-5.89 2.49zm0-3.67c2.42 0 2.73-3 2.73-4.23s-.31-4.26-2.73-4.26-2.79 3-2.79 4.26.32 4.23 2.82 4.23zM95.49 24.37a7.82 7.82 0 01-5.73-2.25 8.36 8.36 0 01-2-5.62 8.32 8.32 0 012.08-5.71 8.4 8.4 0 0111.31 0 8.43 8.43 0 012 5.69 8.6 8.6 0 01-1.77 5.38 7.6 7.6 0 01-5.89 2.51zm0-3.67c2.42 0 2.73-3 2.73-4.23s-.31-4.26-2.73-4.26-2.8 3-2.8 4.26.31 4.23 2.83 4.23zM77.66 30c-5.74 0-7-3.25-7.23-4.52l4.6-.26c.41.91 1.17 1.41 2.76 1.41a2.45 2.45 0 002.82-2.53v-2.68a7 7 0 01-1.7 1.75 6.12 6.12 0 01-5.85-.08c-2.41-1.37-3-4.25-3-6.66 0-.89.12-3.67 1.45-5.42a5.67 5.67 0 014.64-2.4c1.2 0 3 .25 4.46 2.82V8.81h4.85v15.33a5.2 5.2 0 01-2.12 4.32A9.92 9.92 0 0177.66 30zm.15-9.66c2.53 0 2.81-2.69 2.81-3.91s-.31-4-2.81-4-2.81 2.8-2.81 4 .27 3.91 2.81 3.91zM55.56 3.72h9.81v2.41h-9.81z"
+                    fill="var(--color-contrast-higher)" />
+                  <circle cx="15" cy="15" r="15" fill="var(--color-primary)" />
+                </svg>
+              </a>
+            </div>
 
-            <div class="margin-top-sm">
-              <button class="reset btn-fx-3 radius-md text-sm">
-                <div class="btn-fx-3__inner padding-y-xs padding-x-md">
-                  <span>Find Out More</span>
+            <p class="footer-v4__print">&copy; Copyright. All rights reserved.</p>
 
-                  <figure class="btn-fx-3__icon-wrapper" aria-hidden="true">
-                    <svg class="icon icon--xs" viewBox="0 0 16 16">
-                      <title>calendar-add-event</title>
-                      <g stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M8 11.5h7.5"></path>
-                        <path d="M13 9l2.5 2.5L13 14"></path>
-                        <path d="M.5 5.5h15"></path>
-                        <path d="M15.5 8.5V4A1.5 1.5 0 0 0 14 2.5H2A1.5 1.5 0 0 0 .5 4v9A1.5 1.5 0 0 0 2 14.5h7.5">
-                        </path>
-                        <path d="M4.5.5v2"></path>
-                        <path d="M11.5.5v2"></path>
-                      </g>
-                    </svg>
-                  </figure>
-                </div>
-              </button>
+            <div class="footer-v4__socials">
+              <a href="#0">
+                <svg class="icon" viewBox="0 0 16 16">
+                  <title>Follow us on Twitter</title>
+                  <g>
+                    <path
+                      d="M16,3c-0.6,0.3-1.2,0.4-1.9,0.5c0.7-0.4,1.2-1,1.4-1.8c-0.6,0.4-1.3,0.6-2.1,0.8c-0.6-0.6-1.5-1-2.4-1 C9.3,1.5,7.8,3,7.8,4.8c0,0.3,0,0.5,0.1,0.7C5.2,5.4,2.7,4.1,1.1,2.1c-0.3,0.5-0.4,1-0.4,1.7c0,1.1,0.6,2.1,1.5,2.7 c-0.5,0-1-0.2-1.5-0.4c0,0,0,0,0,0c0,1.6,1.1,2.9,2.6,3.2C3,9.4,2.7,9.4,2.4,9.4c-0.2,0-0.4,0-0.6-0.1c0.4,1.3,1.6,2.3,3.1,2.3 c-1.1,0.9-2.5,1.4-4.1,1.4c-0.3,0-0.5,0-0.8,0c1.5,0.9,3.2,1.5,5,1.5c6,0,9.3-5,9.3-9.3c0-0.1,0-0.3,0-0.4C15,4.3,15.6,3.7,16,3z">
+                    </path>
+                  </g>
+                </svg>
+              </a>
+
+              <a href="#0">
+                <svg class="icon" viewBox="0 0 16 16">
+                  <title>Follow us on Youtube</title>
+                  <g>
+                    <path
+                      d="M15.8,4.8c-0.2-1.3-0.8-2.2-2.2-2.4C11.4,2,8,2,8,2S4.6,2,2.4,2.4C1,2.6,0.3,3.5,0.2,4.8C0,6.1,0,8,0,8 s0,1.9,0.2,3.2c0.2,1.3,0.8,2.2,2.2,2.4C4.6,14,8,14,8,14s3.4,0,5.6-0.4c1.4-0.3,2-1.1,2.2-2.4C16,9.9,16,8,16,8S16,6.1,15.8,4.8z M6,11V5l5,3L6,11z">
+                    </path>
+                  </g>
+                </svg>
+              </a>
+
+              <a href="#0">
+                <svg class="icon" viewBox="0 0 16 16">
+                  <title>Follow us on Github</title>
+                  <g>
+                    <path
+                      d="M8,0.2c-4.4,0-8,3.6-8,8c0,3.5,2.3,6.5,5.5,7.6 C5.9,15.9,6,15.6,6,15.4c0-0.2,0-0.7,0-1.4C3.8,14.5,3.3,13,3.3,13c-0.4-0.9-0.9-1.2-0.9-1.2c-0.7-0.5,0.1-0.5,0.1-0.5 c0.8,0.1,1.2,0.8,1.2,0.8C4.4,13.4,5.6,13,6,12.8c0.1-0.5,0.3-0.9,0.5-1.1c-1.8-0.2-3.6-0.9-3.6-4c0-0.9,0.3-1.6,0.8-2.1 c-0.1-0.2-0.4-1,0.1-2.1c0,0,0.7-0.2,2.2,0.8c0.6-0.2,1.3-0.3,2-0.3c0.7,0,1.4,0.1,2,0.3c1.5-1,2.2-0.8,2.2-0.8 c0.4,1.1,0.2,1.9,0.1,2.1c0.5,0.6,0.8,1.3,0.8,2.1c0,3.1-1.9,3.7-3.7,3.9C9.7,12,10,12.5,10,13.2c0,1.1,0,1.9,0,2.2 c0,0.2,0.1,0.5,0.6,0.4c3.2-1.1,5.5-4.1,5.5-7.6C16,3.8,12.4,0.2,8,0.2z">
+                    </path>
+                  </g>
+                </svg>
+              </a>
             </div>
           </div>
-        </div>
+        </footer>
 
-        <div class="card-v13 col-4@md">
-          <a class="card-v13__figure-wrapper" href="#0">
-            <figure class="card-v13__figure">
-              <img src="../../../app/assets/img/card-v13-img-3.jpg" alt="Image description" loading="lazy">
-            </figure>
-          </a>
-
-          <div class="text-center margin-top-sm">
-            <h3 class="text-md">
-              <a class="color-contrast-higher" href="#0">Mathew Burford</a>
-            </h3>
-
-            <div class="card-v13__separator margin-x-auto margin-y-sm" role="presentation"></div>
-
-            <p class="color-contrast-medium text-sm line-height-lg">Lorem ipsum dolor sit amet consectetur adipisicing
-              elit. Earum neque velit.</p>
-
-            <div class="margin-top-sm">
-              <button class="reset btn-fx-3 radius-md text-sm">
-                <div class="btn-fx-3__inner padding-y-xs padding-x-md">
-                  <span>Book Class</span>
-
-                  <figure class="btn-fx-3__icon-wrapper" aria-hidden="true">
-                    <svg class="icon icon--xs" viewBox="0 0 16 16">
-                      <title>calendar-add-event</title>
-                      <g stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M8 11.5h7.5"></path>
-                        <path d="M13 9l2.5 2.5L13 14"></path>
-                        <path d="M.5 5.5h15"></path>
-                        <path d="M15.5 8.5V4A1.5 1.5 0 0 0 14 2.5H2A1.5 1.5 0 0 0 .5 4v9A1.5 1.5 0 0 0 2 14.5h7.5">
-                        </path>
-                        <path d="M4.5.5v2"></path>
-                        <path d="M11.5.5v2"></path>
-                      </g>
-                    </svg>
-                  </figure>
-                </div>
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-
-  <!--FOOTER-->
-  <footer class="footer-v4 padding-y-lg">
-    <div class="container max-width-lg">
-      <nav class="footer-v4__nav">
-        <ul class="footer-v4__nav-list">
-          <li class="footer-v4__nav-item"><a href="#0">About Us</a></li>
-          <li class="footer-v4__nav-item"><a href="#0">Resources</a></li>
-          <li class="footer-v4__nav-item"><a href="#0">Artists</a></li>
-          <li class="footer-v4__nav-item"><a href="#0">Content</a></li>
-          <li class="footer-v4__nav-item"><a href="#0">Contact Us</a></li>
-          <li class="footer-v4__nav-item"><a href="#0">Get Help Now</a></li>
-          <li class="footer-v4__nav-item"><a href="#0">Our Story</a></li>
-          <li class="footer-v4__nav-item"><a href="#0">Donate</a></li>
-
-        </ul>
-      </nav>
-
-      <div class="footer-v4__logo">
-        <a href="#0">
-          <svg width="104" height="30" viewBox="0 0 104 30">
-            <title>Go to homepage</title>
-            <path
-              d="M37.54 24.08V3.72h4.92v16.37h8.47v4zM60.47 24.37a7.82 7.82 0 01-5.73-2.25 8.36 8.36 0 01-2-5.62 8.32 8.32 0 012.08-5.71 8 8 0 015.64-2.18 8.07 8.07 0 015.68 2.2 8.49 8.49 0 012 5.69 8.63 8.63 0 01-1.78 5.38 7.6 7.6 0 01-5.89 2.49zm0-3.67c2.42 0 2.73-3 2.73-4.23s-.31-4.26-2.73-4.26-2.79 3-2.79 4.26.32 4.23 2.82 4.23zM95.49 24.37a7.82 7.82 0 01-5.73-2.25 8.36 8.36 0 01-2-5.62 8.32 8.32 0 012.08-5.71 8.4 8.4 0 0111.31 0 8.43 8.43 0 012 5.69 8.6 8.6 0 01-1.77 5.38 7.6 7.6 0 01-5.89 2.51zm0-3.67c2.42 0 2.73-3 2.73-4.23s-.31-4.26-2.73-4.26-2.8 3-2.8 4.26.31 4.23 2.83 4.23zM77.66 30c-5.74 0-7-3.25-7.23-4.52l4.6-.26c.41.91 1.17 1.41 2.76 1.41a2.45 2.45 0 002.82-2.53v-2.68a7 7 0 01-1.7 1.75 6.12 6.12 0 01-5.85-.08c-2.41-1.37-3-4.25-3-6.66 0-.89.12-3.67 1.45-5.42a5.67 5.67 0 014.64-2.4c1.2 0 3 .25 4.46 2.82V8.81h4.85v15.33a5.2 5.2 0 01-2.12 4.32A9.92 9.92 0 0177.66 30zm.15-9.66c2.53 0 2.81-2.69 2.81-3.91s-.31-4-2.81-4-2.81 2.8-2.81 4 .27 3.91 2.81 3.91zM55.56 3.72h9.81v2.41h-9.81z"
-              fill="var(--color-contrast-higher)" />
-            <circle cx="15" cy="15" r="15" fill="var(--color-primary)" />
-          </svg>
-        </a>
-      </div>
-
-      <p class="footer-v4__print">&copy; Copyright. All rights reserved.</p>
-
-      <div class="footer-v4__socials">
-        <a href="#0">
-          <svg class="icon" viewBox="0 0 16 16">
-            <title>Follow us on Twitter</title>
-            <g>
-              <path
-                d="M16,3c-0.6,0.3-1.2,0.4-1.9,0.5c0.7-0.4,1.2-1,1.4-1.8c-0.6,0.4-1.3,0.6-2.1,0.8c-0.6-0.6-1.5-1-2.4-1 C9.3,1.5,7.8,3,7.8,4.8c0,0.3,0,0.5,0.1,0.7C5.2,5.4,2.7,4.1,1.1,2.1c-0.3,0.5-0.4,1-0.4,1.7c0,1.1,0.6,2.1,1.5,2.7 c-0.5,0-1-0.2-1.5-0.4c0,0,0,0,0,0c0,1.6,1.1,2.9,2.6,3.2C3,9.4,2.7,9.4,2.4,9.4c-0.2,0-0.4,0-0.6-0.1c0.4,1.3,1.6,2.3,3.1,2.3 c-1.1,0.9-2.5,1.4-4.1,1.4c-0.3,0-0.5,0-0.8,0c1.5,0.9,3.2,1.5,5,1.5c6,0,9.3-5,9.3-9.3c0-0.1,0-0.3,0-0.4C15,4.3,15.6,3.7,16,3z">
-              </path>
-            </g>
-          </svg>
-        </a>
-
-        <a href="#0">
-          <svg class="icon" viewBox="0 0 16 16">
-            <title>Follow us on Youtube</title>
-            <g>
-              <path
-                d="M15.8,4.8c-0.2-1.3-0.8-2.2-2.2-2.4C11.4,2,8,2,8,2S4.6,2,2.4,2.4C1,2.6,0.3,3.5,0.2,4.8C0,6.1,0,8,0,8 s0,1.9,0.2,3.2c0.2,1.3,0.8,2.2,2.2,2.4C4.6,14,8,14,8,14s3.4,0,5.6-0.4c1.4-0.3,2-1.1,2.2-2.4C16,9.9,16,8,16,8S16,6.1,15.8,4.8z M6,11V5l5,3L6,11z">
-              </path>
-            </g>
-          </svg>
-        </a>
-
-        <a href="#0">
-          <svg class="icon" viewBox="0 0 16 16">
-            <title>Follow us on Github</title>
-            <g>
-              <path
-                d="M8,0.2c-4.4,0-8,3.6-8,8c0,3.5,2.3,6.5,5.5,7.6 C5.9,15.9,6,15.6,6,15.4c0-0.2,0-0.7,0-1.4C3.8,14.5,3.3,13,3.3,13c-0.4-0.9-0.9-1.2-0.9-1.2c-0.7-0.5,0.1-0.5,0.1-0.5 c0.8,0.1,1.2,0.8,1.2,0.8C4.4,13.4,5.6,13,6,12.8c0.1-0.5,0.3-0.9,0.5-1.1c-1.8-0.2-3.6-0.9-3.6-4c0-0.9,0.3-1.6,0.8-2.1 c-0.1-0.2-0.4-1,0.1-2.1c0,0,0.7-0.2,2.2,0.8c0.6-0.2,1.3-0.3,2-0.3c0.7,0,1.4,0.1,2,0.3c1.5-1,2.2-0.8,2.2-0.8 c0.4,1.1,0.2,1.9,0.1,2.1c0.5,0.6,0.8,1.3,0.8,2.1c0,3.1-1.9,3.7-3.7,3.9C9.7,12,10,12.5,10,13.2c0,1.1,0,1.9,0,2.2 c0,0.2,0.1,0.5,0.6,0.4c3.2-1.1,5.5-4.1,5.5-7.6C16,3.8,12.4,0.2,8,0.2z">
-              </path>
-            </g>
-          </svg>
-        </a>
-      </div>
-    </div>
-  </footer>
-
-  <script src="../assets/js/scripts.js"></script>
+        <script src="../assets/js/scripts.js"></script>
 </body>
 
 </html>
