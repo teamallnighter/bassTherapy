@@ -38,4 +38,10 @@ npm run deploy
 npm run build-deploy
 ```
 
+### Build and Deploy to Netlify Then Start A Dev Server
+
+```bash
+npm run build-deploy-dev
+```
+
 Deploy to [LIVE SITE](https://basstherapy.netlify.app/)
