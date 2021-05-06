@@ -1,3 +1,5 @@
+[![Netlify Status](https://api.netlify.com/api/v1/badges/5e499429-f6e7-48ab-805e-aa9f5823bf9b/deploy-status)](https://app.netlify.com/sites/basstherapy/deploys)
+
 # Bass Therapy Website
 
 ## Download 

@@ -62,6 +62,24 @@ h1, h2, h3, h4 {
 .font-secondary { font-family: var(--font-secondary); }
 .font-tertiary { font-family: var(--font-tertiary); }
 
+// color
+.color-secondary-darker { color: alpha(var(--color-secondary-darker), var(--color-o, 1)); }
+.color-secondary-dark { color: alpha(var(--color-secondary-dark), var(--color-o, 1)); }
+.color-secondary { color: alpha(var(--color-secondary), var(--color-o, 1)); }
+.color-secondary-light { color: alpha(var(--color-secondary-light), var(--color-o, 1)); }
+.color-secondary-lighter { color: alpha(var(--color-secondary-lighter), var(--color-o, 1)); }
+.color-tertiary-darker { color: alpha(var(--color-tertiary-darker), var(--color-o, 1)); }
+.color-tertiary-dark { color: alpha(var(--color-tertiary-dark), var(--color-o, 1)); }
+.color-tertiary { color: alpha(var(--color-tertiary), var(--color-o, 1)); }
+.color-tertiary-light { color: alpha(var(--color-tertiary-light), var(--color-o, 1)); }
+.color-tertiary-lighter { color: alpha(var(--color-tertiary-lighter), var(--color-o, 1)); }
+
+// gradient
+.color-gradient-primary-top { background-image: linear-gradient(0deg, var(--gradient-primary-stop-1), var(--gradient-primary-stop-2)); }
+.color-gradient-primary-right { background-image: linear-gradient(90deg, var(--gradient-primary-stop-1), var(--gradient-primary-stop-2)); }
+.color-gradient-primary-bottom { background-image: linear-gradient(180deg, var(--gradient-primary-stop-1), var(--gradient-primary-stop-2)); }
+.color-gradient-primary-left { background-image: linear-gradient(270deg, var(--gradient-primary-stop-1), var(--gradient-primary-stop-2)); }
+
 // --------------------------------
 
 // (END) Global editor code

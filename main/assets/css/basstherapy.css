@@ -52,3 +52,16 @@ footer{
     color: var(--color-accent);
     
 }
+
+.seperator-wrapper{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    width: 100vw;
+}
+
+#myCanvas{
+    position: absolute;
+    display: block;
+  }

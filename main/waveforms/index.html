@@ -1,22 +1,19 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Bass Therapy 2</title>
   <script>document.getElementsByTagName("html")[0].className += " js";</script>
   <link rel="preconnect" href="https://fonts.gstatic.com">
   <link
     href="https://fonts.googleapis.com/css2?family=Josefin+Slab&family=Merriweather&family=Special+Elite&display=swap"
     rel="stylesheet">
-  <link id="codyframe" rel="stylesheet" href="assets/css/style.css">
-  <link id="bassTherapyDotCSS" rel="stylesheet" href="assets/css/basstherapy.css">
+  <link id="codyframe" rel="stylesheet" href="../assets/css/style.css">
+  <link id="bassTherapyDotCSS" rel="stylesheet" href="../assets/css/basstherapy.css">
   <script src="https://kit.fontawesome.com/30581d4312.js" crossorigin="anonymous"></script>
-  <!-- Uncomment the script below if you need to support browsers where CSS Variables have not been implemented (e.g., IE11) -->
-  <!-- <script>
-    if(!('CSS' in window) || !CSS.supports('color', 'var(--color-var)')) {var cfStyle = document.getElementById('codyframe');if(cfStyle) {var href = cfStyle.getAttribute('href');href = href.replace('style.css', 'style-fallback.css');cfStyle.setAttribute('href', href);}}
-  </script> -->
-  <title>BASS THERAPY</title>
+  <link rel="stylesheet" href="./style.css">
+
 </head>
 
 <body>
@@ -95,6 +92,9 @@
       </div>
     </div>
   </header>
+  <!-- partial:index.partial.html -->
+  <canvas id="myCanvas"></canvas>
+  <!-- partial -->
   <section class="height-100vh bg-cover bg-no-repeat bg-center"
     style="background-image: url(../../assets/img/hiding-nav-img-1.jpg)">
     <section class="hero-video-bg position-relative padding-y-lg" style="height:100vh;">
@@ -117,7 +117,8 @@
     </section>
   </section>
   </section>
-  <div class="bg-contrast-lower hide-nav z-index-2 js-hide-nav js-hide-nav--sub">
+
+  <!--<div class="bg-contrast-lower hide-nav z-index-2 js-hide-nav js-hide-nav--sub">
     <div class="container max-width-lg">
       <div class="subnav  js-subnav">
         <button class="reset btn btn--subtle margin-y-sm subnav__control js-subnav__control">
@@ -152,54 +153,54 @@
   <section class="position-relative padding-y-xxxl demo-theme-dark js-cha-section" id="about-us">
     <canvas id="myCanvas"></canvas>
     <!-- your section content 👇-->
-    <section class="position-relative z-index-1 padding-y-lg">
-      <div class="container max-width-adaptive-lg">
-        <div class="grid gap-md items-center">
-          <div class="col-6@md">
-            <div class="text-component">
-              <p class="text-sm color-contrast-medium">About Us</p>
-              <h1>Music Helps People</h1>
-              <p>Music <strong>IS</strong> the universal language. It has a proven healing properties and has helped all
-                of u s get through our toughest times. We believe in promoting genuine music while spreading awareness
-                and ending stigmas around mental health and addictin</p>
-            </div>
-            <div class="margin-top-sm">
-              <div class="flex flex-wrap gap-sm items-center">
-                <a href="#0" class="btn btn--primary">Our Mission Statement</a>
-                <a href="#0" class="color-inherit">Learn more</a>
-              </div>
+  <section class="position-relative z-index-1 padding-y-lg">
+    <div class="container max-width-adaptive-lg">
+      <div class="grid gap-md items-center">
+        <div class="col-6@md">
+          <div class="text-component">
+            <p class="text-sm color-contrast-medium">About Us</p>
+            <h1>Music Helps People</h1>
+            <p>Music <strong>IS</strong> the universal language. It has a proven healing properties and has helped all
+              of u s get through our toughest times. We believe in promoting genuine music while spreading awareness
+              and ending stigmas around mental health and addictin</p>
+          </div>
+          <div class="margin-top-sm">
+            <div class="flex flex-wrap gap-sm items-center">
+              <a href="#0" class="btn btn--primary">Our Mission Statement</a>
+              <a href="#0" class="color-inherit">Learn more</a>
             </div>
           </div>
-          <div class="col-6@md">
-            <div class="diamond-grid ">
-              <div class="diamond-grid__inner">
-                <div class="diamond-grid__item bg-contrast-lower shadow-md">
-                  <img class="diamond-grid__img"
-                    src="https://images.unsplash.com/photo-1566737236500-c8ac43014a67?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1350&q=80"
-                    alt="Image description">
-                </div>
-                <div class="diamond-grid__item bg-contrast-lower shadow-md">
-                  <img class="diamond-grid__img"
-                    src="https://images.unsplash.com/photo-1583244532610-2a234e7c3eca?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1350&q=80"
-                    alt="Image description">
-                </div>
+        </div>
+        <div class="col-6@md">
+          <div class="diamond-grid ">
+            <div class="diamond-grid__inner">
+              <div class="diamond-grid__item bg-contrast-lower shadow-md">
+                <img class="diamond-grid__img"
+                  src="https://images.unsplash.com/photo-1566737236500-c8ac43014a67?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1350&q=80"
+                  alt="Image description">
+              </div>
+              <div class="diamond-grid__item bg-contrast-lower shadow-md">
+                <img class="diamond-grid__img"
+                  src="https://images.unsplash.com/photo-1583244532610-2a234e7c3eca?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1350&q=80"
+                  alt="Image description">
+              </div>
 
-                <div class="diamond-grid__item bg-contrast-lower shadow-md">
-                  <img class="diamond-grid__img"
-                    src="https://images.unsplash.com/photo-1502872364588-894d7d6ddfab?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1350&q=80"
-                    alt="Image description">
-                </div>
-                <div class="diamond-grid__item bg-contrast-lower shadow-md">
-                  <img class="diamond-grid__img"
-                    src="https://images.unsplash.com/photo-1540319585560-a4fcf1810366?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1350&q=80"
-                    alt="Image description">
-                </div>
+              <div class="diamond-grid__item bg-contrast-lower shadow-md">
+                <img class="diamond-grid__img"
+                  src="https://images.unsplash.com/photo-1502872364588-894d7d6ddfab?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1350&q=80"
+                  alt="Image description">
+              </div>
+              <div class="diamond-grid__item bg-contrast-lower shadow-md">
+                <img class="diamond-grid__img"
+                  src="https://images.unsplash.com/photo-1540319585560-a4fcf1810366?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1350&q=80"
+                  alt="Image description">
               </div>
             </div>
           </div>
         </div>
       </div>
-    </section>
+    </div>
+  </section>
   </section>
   <div class="seperator-wrapper">
     <img src="assets/media/img/WAVEFORM2.svg" />
@@ -445,10 +446,12 @@
       </div>
     </div>
   </footer>
-
+  <script src='https://s3-us-west-2.amazonaws.com/s.cdpn.io/127738/perlin.js'></script>
+  <script src="./script.js"></script>
   <script src="assets/js/scripts.js"></script>
   <script src="assets/js/wavform.js"></script>
   <script src="assets/js/bassTherapy.js"></script>
+
 </body>
 
 </html>

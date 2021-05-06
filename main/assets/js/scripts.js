@@ -3915,6 +3915,343 @@ function resetFocusTabsStyle() {
 		}
 	};
 }());
+// File#: _1_masonry
+// Usage: codyhouse.co/license
+
+(function() {
+  var Masonry = function(element) {
+    this.element = element;
+    this.list = this.element.getElementsByClassName('js-masonry__list')[0];
+    this.items = this.element.getElementsByClassName('js-masonry__item');
+    this.activeColumns = 0;
+    this.colStartWidth = 0; // col min-width (defined in CSS using --masonry-col-auto-size variable)
+    this.colWidth = 0; // effective column width
+    this.colGap = 0;
+    // store col heights and items
+    this.colHeights = [];
+    this.colItems = [];
+    // flex full support
+    this.flexSupported = checkFlexSupported(this.items[0]);
+    getGridLayout(this); // get initial grid params
+    setGridLayout(this); // set grid params (width of elements)
+    initMasonryLayout(this); // init gallery layout
+  };
+
+  function checkFlexSupported(item) {
+    var itemStyle = window.getComputedStyle(item);
+    return itemStyle.getPropertyValue('flex-basis') != 'auto';
+  };
+
+  function getGridLayout(grid) { // this is used to get initial grid details (width/grid gap)
+    var itemStyle = window.getComputedStyle(grid.items[0]);
+    if( grid.colStartWidth == 0) {
+      grid.colStartWidth = parseFloat(itemStyle.getPropertyValue('width'));
+    }
+    grid.colGap = parseFloat(itemStyle.getPropertyValue('margin-right'));
+  };
+
+  function setGridLayout(grid) { // set width of items in the grid
+    var containerWidth = parseFloat(window.getComputedStyle(grid.element).getPropertyValue('width'));
+    grid.activeColumns = parseInt((containerWidth + grid.colGap)/(grid.colStartWidth+grid.colGap));
+    if(grid.activeColumns == 0) grid.activeColumns = 1;
+    grid.colWidth = parseFloat((containerWidth - (grid.activeColumns - 1)*grid.colGap)/grid.activeColumns);
+    for(var i = 0; i < grid.items.length; i++) {
+      grid.items[i].style.width = grid.colWidth+'px'; // reset items width
+    }
+  };
+
+  function initMasonryLayout(grid) {
+    if(grid.flexSupported) {
+      checkImgLoaded(grid); // reset layout when images are loaded
+    } else {
+      Util.addClass(grid.element, 'masonry--loaded'); // make sure the gallery is visible
+    }
+
+    grid.element.addEventListener('masonry-resize', function(){ // window has been resized -> reset masonry layout
+      getGridLayout(grid);
+      setGridLayout(grid);
+      if(grid.flexSupported) layItems(grid); 
+    });
+
+    grid.element.addEventListener('masonry-reset', function(event){ // reset layout (e.g., new items added to the gallery)
+      if(grid.flexSupported) checkImgLoaded(grid); 
+    });
+  };
+
+  function layItems(grid) {
+    Util.addClass(grid.element, 'masonry--loaded'); // make sure the gallery is visible
+    grid.colHeights = [];
+    grid.colItems = [];
+
+    // grid layout has already been set -> update container height and order of items
+    for(var j = 0; j < grid.activeColumns; j++) {
+      grid.colHeights.push(0); // reset col heights
+      grid.colItems[j] = []; // reset items order
+    }
+    
+    for(var i = 0; i < grid.items.length; i++) {
+      var minHeight = Math.min.apply( Math, grid.colHeights ),
+        index = grid.colHeights.indexOf(minHeight);
+      if(grid.colItems[index]) grid.colItems[index].push(i);
+      grid.items[i].style.flexBasis = 0; // reset flex basis before getting height
+      var itemHeight = grid.items[i].getBoundingClientRect().height || grid.items[i].offsetHeight || 1;
+      grid.colHeights[index] = grid.colHeights[index] + grid.colGap + itemHeight;
+    }
+
+    // reset height of container
+    var masonryHeight = Math.max.apply( Math, grid.colHeights ) + 5;
+    grid.list.style.cssText = 'height: '+ masonryHeight + 'px;';
+
+    // go through elements and set flex order
+    var order = 0;
+    for(var i = 0; i < grid.colItems.length; i++) {
+      for(var j = 0; j < grid.colItems[i].length; j++) {
+        grid.items[grid.colItems[i][j]].style.order = order;
+        order = order + 1;
+      }
+      // change flex-basis of last element of each column, so that next element shifts to next col
+      var lastItemCol = grid.items[grid.colItems[i][grid.colItems[i].length - 1]];
+      lastItemCol.style.flexBasis = masonryHeight - grid.colHeights[i] + lastItemCol.getBoundingClientRect().height - 5 + 'px';
+    }
+
+    // emit custom event when grid has been reset
+    grid.element.dispatchEvent(new CustomEvent('masonry-laid'));
+  };
+
+  function checkImgLoaded(grid) {
+    var imgs = grid.list.getElementsByTagName('img');
+
+    function countLoaded() {
+      var setTimeoutOn = false;
+      for(var i = 0; i < imgs.length; i++) {
+        if(!imgs[i].complete) {
+          setTimeoutOn = true;
+          break;
+        } else if (typeof imgs[i].naturalHeight !== "undefined" && imgs[i].naturalHeight == 0) {
+          setTimeoutOn = true;
+          break;
+        }
+      }
+
+      if(!setTimeoutOn) {
+        layItems(grid);
+      } else {
+        setTimeout(function(){
+          countLoaded();
+        }, 100);
+      }
+    };
+
+    if(imgs.length == 0) {
+      layItems(grid); // no need to wait -> no img available
+    } else {
+      countLoaded();
+    }
+  };
+
+  //initialize the Masonry objects
+  var masonries = document.getElementsByClassName('js-masonry'), 
+    flexSupported = Util.cssSupports('flex-basis', 'auto'),
+    masonriesArray = [];
+
+  if( masonries.length > 0) {
+    for( var i = 0; i < masonries.length; i++) {
+      if(!flexSupported) {
+        Util.addClass(masonries[i], 'masonry--loaded'); // reveal gallery
+      } else {
+        (function(i){masonriesArray.push(new Masonry(masonries[i]));})(i); // init Masonry Layout
+      }
+    }
+
+    if(!flexSupported) return;
+
+    // listen to window resize -> reorganize items in gallery
+    var resizingId = false,
+      customEvent = new CustomEvent('masonry-resize');
+      
+    window.addEventListener('resize', function() {
+      clearTimeout(resizingId);
+      resizingId = setTimeout(doneResizing, 500);
+    });
+
+    function doneResizing() {
+      for( var i = 0; i < masonriesArray.length; i++) {
+        (function(i){masonriesArray[i].element.dispatchEvent(customEvent)})(i);
+      };
+    };
+  };
+}());
+// File#: _1_menu
+// Usage: codyhouse.co/license
+(function() {
+	var Menu = function(element) {
+		this.element = element;
+		this.elementId = this.element.getAttribute('id');
+		this.menuItems = this.element.getElementsByClassName('js-menu__content');
+		this.trigger = document.querySelectorAll('[aria-controls="'+this.elementId+'"]');
+		this.selectedTrigger = false;
+		this.menuIsOpen = false;
+		this.initMenu();
+		this.initMenuEvents();
+	};	
+
+	Menu.prototype.initMenu = function() {
+		// init aria-labels
+		for(var i = 0; i < this.trigger.length; i++) {
+			Util.setAttributes(this.trigger[i], {'aria-expanded': 'false', 'aria-haspopup': 'true'});
+		}
+		// init tabindex
+		for(var i = 0; i < this.menuItems.length; i++) {
+			this.menuItems[i].setAttribute('tabindex', '0');
+		}
+	};
+
+	Menu.prototype.initMenuEvents = function() {
+		var self = this;
+		for(var i = 0; i < this.trigger.length; i++) {(function(i){
+			self.trigger[i].addEventListener('click', function(event){
+				event.preventDefault();
+				// if the menu had been previously opened by another trigger element -> close it first and reopen in the right position
+				if(Util.hasClass(self.element, 'menu--is-visible') && self.selectedTrigger !=  self.trigger[i]) {
+					self.toggleMenu(false, false); // close menu
+				}
+				// toggle menu
+				self.selectedTrigger = self.trigger[i];
+				self.toggleMenu(!Util.hasClass(self.element, 'menu--is-visible'), true);
+			});
+		})(i);}
+		
+		// keyboard events
+		this.element.addEventListener('keydown', function(event) {
+			// use up/down arrow to navigate list of menu items
+			if( !Util.hasClass(event.target, 'js-menu__content') ) return;
+			if( (event.keyCode && event.keyCode == 40) || (event.key && event.key.toLowerCase() == 'arrowdown') ) {
+				self.navigateItems(event, 'next');
+			} else if( (event.keyCode && event.keyCode == 38) || (event.key && event.key.toLowerCase() == 'arrowup') ) {
+				self.navigateItems(event, 'prev');
+			}
+		});
+	};
+
+	Menu.prototype.toggleMenu = function(bool, moveFocus) {
+		var self = this;
+		// toggle menu visibility
+		Util.toggleClass(this.element, 'menu--is-visible', bool);
+		this.menuIsOpen = bool;
+		if(bool) {
+			this.selectedTrigger.setAttribute('aria-expanded', 'true');
+			Util.moveFocus(this.menuItems[0]);
+			this.element.addEventListener("transitionend", function(event) {Util.moveFocus(self.menuItems[0]);}, {once: true});
+			// position the menu element
+			this.positionMenu();
+			// add class to menu trigger
+			Util.addClass(this.selectedTrigger, 'menu-control--active');
+		} else if(this.selectedTrigger) {
+			this.selectedTrigger.setAttribute('aria-expanded', 'false');
+			if(moveFocus) Util.moveFocus(this.selectedTrigger);
+			// remove class from menu trigger
+			Util.removeClass(this.selectedTrigger, 'menu-control--active');
+			this.selectedTrigger = false;
+		}
+	};
+
+	Menu.prototype.positionMenu = function(event, direction) {
+		var selectedTriggerPosition = this.selectedTrigger.getBoundingClientRect(),
+			menuOnTop = (window.innerHeight - selectedTriggerPosition.bottom) < selectedTriggerPosition.top;
+			// menuOnTop = window.innerHeight < selectedTriggerPosition.bottom + this.element.offsetHeight;
+			
+		var left = selectedTriggerPosition.left,
+			right = (window.innerWidth - selectedTriggerPosition.right),
+			isRight = (window.innerWidth < selectedTriggerPosition.left + this.element.offsetWidth);
+
+		var horizontal = isRight ? 'right: '+right+'px;' : 'left: '+left+'px;',
+			vertical = menuOnTop
+				? 'bottom: '+(window.innerHeight - selectedTriggerPosition.top)+'px;'
+				: 'top: '+selectedTriggerPosition.bottom+'px;';
+		// check right position is correct -> otherwise set left to 0
+		if( isRight && (right + this.element.offsetWidth) > window.innerWidth) horizontal = 'left: '+ parseInt((window.innerWidth - this.element.offsetWidth)/2)+'px;';
+		var maxHeight = menuOnTop ? selectedTriggerPosition.top - 20 : window.innerHeight - selectedTriggerPosition.bottom - 20;
+		this.element.setAttribute('style', horizontal + vertical +'max-height:'+Math.floor(maxHeight)+'px;');
+	};
+
+	Menu.prototype.navigateItems = function(event, direction) {
+		event.preventDefault();
+		var index = Util.getIndexInArray(this.menuItems, event.target),
+			nextIndex = direction == 'next' ? index + 1 : index - 1;
+		if(nextIndex < 0) nextIndex = this.menuItems.length - 1;
+		if(nextIndex > this.menuItems.length - 1) nextIndex = 0;
+		Util.moveFocus(this.menuItems[nextIndex]);
+	};
+
+	Menu.prototype.checkMenuFocus = function() {
+		var menuParent = document.activeElement.closest('.js-menu');
+		if (!menuParent || !this.element.contains(menuParent)) this.toggleMenu(false, false);
+	};
+
+	Menu.prototype.checkMenuClick = function(target) {
+		if( !this.element.contains(target) && !target.closest('[aria-controls="'+this.elementId+'"]')) this.toggleMenu(false);
+	};
+
+	window.Menu = Menu;
+
+	//initialize the Menu objects
+	var menus = document.getElementsByClassName('js-menu');
+	if( menus.length > 0 ) {
+		var menusArray = [];
+		var scrollingContainers = [];
+		for( var i = 0; i < menus.length; i++) {
+			(function(i){
+				menusArray.push(new Menu(menus[i]));
+				var scrollableElement = menus[i].getAttribute('data-scrollable-element');
+				if(scrollableElement && !scrollingContainers.includes(scrollableElement)) scrollingContainers.push(scrollableElement);
+			})(i);
+		}
+
+		// listen for key events
+		window.addEventListener('keyup', function(event){
+			if( event.keyCode && event.keyCode == 9 || event.key && event.key.toLowerCase() == 'tab' ) {
+				//close menu if focus is outside menu element
+				menusArray.forEach(function(element){
+					element.checkMenuFocus();
+				});
+			} else if( event.keyCode && event.keyCode == 27 || event.key && event.key.toLowerCase() == 'escape' ) {
+				// close menu on 'Esc'
+				menusArray.forEach(function(element){
+					element.toggleMenu(false, false);
+				});
+			} 
+		});
+		// close menu when clicking outside it
+		window.addEventListener('click', function(event){
+			menusArray.forEach(function(element){
+				element.checkMenuClick(event.target);
+			});
+		});
+		// on resize -> close all menu elements
+		window.addEventListener('resize', function(event){
+			menusArray.forEach(function(element){
+				element.toggleMenu(false, false);
+			});
+		});
+		// on scroll -> close all menu elements
+		window.addEventListener('scroll', function(event){
+			menusArray.forEach(function(element){
+				if(element.menuIsOpen) element.toggleMenu(false, false);
+			});
+		});
+		// take into account additinal scrollable containers
+		for(var j = 0; j < scrollingContainers.length; j++) {
+			var scrollingContainer = document.querySelector(scrollingContainers[j]);
+			if(scrollingContainer) {
+				scrollingContainer.addEventListener('scroll', function(event){
+					menusArray.forEach(function(element){
+						if(element.menuIsOpen) element.toggleMenu(false, false);
+					});
+				});
+			}
+		}
+	}
+}());
 // File#: _1_modal-window
 // Usage: codyhouse.co/license
 (function() {
@@ -5138,6 +5475,250 @@ function resetFocusTabsStyle() {
       };
     };
 	}
+}());
+// File#: _1_scrolling-animations
+// Usage: codyhouse.co/license
+(function() {
+  var ScrollFx = function(element, scrollableSelector) {
+    this.element = element;
+    this.options = [];
+    this.boundingRect = this.element.getBoundingClientRect();
+    this.windowHeight = window.innerHeight;
+    this.scrollingFx = [];
+    this.animating = [];
+    this.deltaScrolling = [];
+    this.observer = [];
+    this.scrollableSelector = scrollableSelector; // if the scrollable element is not the window 
+    this.scrollableElement = false;
+    initScrollFx(this);
+    // ToDo - option to pass two selectors to target the element start and stop animation scrolling values -> to be used for sticky/fixed elements
+  };
+
+  function initScrollFx(element) {
+    // do not animate if reduced motion is on
+    if(Util.osHasReducedMotion()) return;
+    // get scrollable element
+    setScrollableElement(element);
+    // get animation params
+    var animation = element.element.getAttribute('data-scroll-fx');
+    if(animation) {
+      element.options.push(extractAnimation(animation));
+    } else {
+      getAnimations(element, 1);
+    }
+    // set Intersection Observer
+    initObserver(element);
+    // update params on resize
+    initResize(element);
+  };
+
+  function setScrollableElement(element) {
+    if(element.scrollableSelector) element.scrollableElement = document.querySelector(element.scrollableSelector);
+  };
+
+  function initObserver(element) {
+    for(var i = 0; i < element.options.length; i++) {
+      (function(i){
+        element.scrollingFx[i] = false;
+        element.deltaScrolling[i] = getDeltaScrolling(element, i);
+        element.animating[i] = false;
+
+        element.observer[i] = new IntersectionObserver(
+          function(entries, observer) { 
+            scrollFxCallback(element, i, entries, observer);
+          },
+          {
+            rootMargin: (element.options[i][5] -100)+"% 0px "+(0 - element.options[i][4])+"% 0px"
+          }
+        );
+    
+        element.observer[i].observe(element.element);
+
+        // set initial value
+        animateScrollFx.bind(element, i)();
+      })(i);
+    }
+  };
+
+  function scrollFxCallback(element, index, entries, observer) {
+		if(entries[0].isIntersecting) {
+      if(element.scrollingFx[index]) return; // listener for scroll event already added
+      // reset delta
+      resetDeltaBeforeAnim(element, index);
+      triggerAnimateScrollFx(element, index);
+    } else {
+      if(!element.scrollingFx[index]) return; // listener for scroll event already removed
+      window.removeEventListener('scroll', element.scrollingFx[index]);
+      element.scrollingFx[index] = false;
+    }
+  };
+
+  function triggerAnimateScrollFx(element, index) {
+    element.scrollingFx[index] = animateScrollFx.bind(element, index);
+    (element.scrollableElement)
+      ? element.scrollableElement.addEventListener('scroll', element.scrollingFx[index])
+      : window.addEventListener('scroll', element.scrollingFx[index]);
+  };
+
+  function animateScrollFx(index) {
+    // if window scroll is outside the proper range -> return
+    if(getScrollY(this) < this.deltaScrolling[index][0]) {
+      setCSSProperty(this, index, this.options[index][1]);
+      return;
+    }
+    if(getScrollY(this) > this.deltaScrolling[index][1]) {
+      setCSSProperty(this, index, this.options[index][2]);
+      return;
+    }
+    if(this.animating[index]) return;
+    this.animating[index] = true;
+    window.requestAnimationFrame(updatePropertyScroll.bind(this, index));
+  };
+
+  function updatePropertyScroll(index) { // get value
+    // check if this is a theme value or a css property
+    if(isNaN(this.options[index][1])) {
+      // this is a theme value to update
+      (getScrollY(this) >= this.deltaScrolling[index][1]) 
+        ? setCSSProperty(this, index, this.options[index][2])
+        : setCSSProperty(this, index, this.options[index][1]);
+    } else {
+      // this is a CSS property
+      var value = this.options[index][1] + (this.options[index][2] - this.options[index][1])*(getScrollY(this) - this.deltaScrolling[index][0])/(this.deltaScrolling[index][1] - this.deltaScrolling[index][0]);
+      // update css property
+      setCSSProperty(this, index, value);
+    }
+    
+    this.animating[index] = false;
+  };
+
+  function setCSSProperty(element, index, value) {
+    if(isNaN(value)) {
+      // this is a theme value that needs to be updated
+      setThemeValue(element, value);
+      return;
+    }
+    if(element.options[index][0] == '--scroll-fx-skew' || element.options[index][0] == '--scroll-fx-scale') {
+      // set 2 different CSS properties for the transformation on both x and y axis
+      element.element.style.setProperty(element.options[index][0]+'-x', value+element.options[index][3]);
+      element.element.style.setProperty(element.options[index][0]+'-y', value+element.options[index][3]);
+    } else {
+      // set single CSS property
+      element.element.style.setProperty(element.options[index][0], value+element.options[index][3]);
+    }
+  };
+
+  function setThemeValue(element, value) {
+    // if value is different from the theme in use -> update it
+    if(element.element.getAttribute('data-theme') != value) {
+      Util.addClass(element.element, 'scroll-fx--theme-transition');
+      element.element.offsetWidth;
+      element.element.setAttribute('data-theme', value);
+      element.element.addEventListener('transitionend', function cb(){
+        element.element.removeEventListener('transitionend', cb);
+        Util.removeClass(element.element, 'scroll-fx--theme-transition');
+      });
+    }
+  };
+
+  function getAnimations(element, index) {
+    var option = element.element.getAttribute('data-scroll-fx-'+index);
+    if(option) {
+      // multiple animations for the same element - iterate through them
+      element.options.push(extractAnimation(option));
+      getAnimations(element, index+1);
+    } 
+    return;
+  };
+
+  function extractAnimation(option) {
+    var array = option.split(',').map(function(item) {
+      return item.trim();
+    });
+    var propertyOptions = getPropertyValues(array[1], array[2]);
+    var animation = [getPropertyLabel(array[0]), propertyOptions[0], propertyOptions[1], propertyOptions[2], parseInt(array[3]), parseInt(array[4])];
+    return animation;
+  };
+
+  function getPropertyLabel(property) {
+    var propertyCss = '--scroll-fx-';
+    for(var i = 0; i < property.length; i++) {
+      propertyCss = (property[i] == property[i].toUpperCase())
+        ? propertyCss + '-'+property[i].toLowerCase()
+        : propertyCss +property[i];
+    }
+    if(propertyCss == '--scroll-fx-rotate') {
+      propertyCss = '--scroll-fx-rotate-z';
+    } else if(propertyCss == '--scroll-fx-translate') {
+      propertyCss = '--scroll-fx-translate-x';
+    }
+    return propertyCss;
+  };
+
+  function getPropertyValues(val1, val2) {
+    var nbVal1 = parseFloat(val1), 
+      nbVal2 = parseFloat(val2),
+      unit = val1.replace(nbVal1, '');
+    if(isNaN(nbVal1)) {
+      // property is a theme value
+      nbVal1 = val1;
+      nbVal2 = val2;
+      unit = '';
+    }
+    return [nbVal1, nbVal2, unit];
+  };
+
+  function getDeltaScrolling(element, index) {
+    // this retrieve the max and min scroll value that should trigger the animation
+    var topDelta = getScrollY(element) - (element.windowHeight - (element.windowHeight + element.boundingRect.height)*element.options[index][4]/100) + element.boundingRect.top,
+      bottomDelta = getScrollY(element) - (element.windowHeight - (element.windowHeight + element.boundingRect.height)*element.options[index][5]/100) + element.boundingRect.top;
+    return [topDelta, bottomDelta];
+  };
+
+  function initResize(element) {
+    var resizingId = false;
+    window.addEventListener('resize', function() {
+      clearTimeout(resizingId);
+      resizingId = setTimeout(resetResize.bind(element), 500);
+    });
+    // emit custom event -> elements have been initialized
+    var event = new CustomEvent('scrollFxReady');
+		element.element.dispatchEvent(event);
+  };
+
+  function resetResize() {
+    // on resize -> make sure to update all scrolling delta values
+    this.boundingRect = this.element.getBoundingClientRect();
+    this.windowHeight = window.innerHeight;
+    for(var i = 0; i < this.deltaScrolling.length; i++) {
+      this.deltaScrolling[i] = getDeltaScrolling(this, i);
+      animateScrollFx.bind(this, i)();
+    }
+    // emit custom event -> elements have been resized
+    var event = new CustomEvent('scrollFxResized');
+		this.element.dispatchEvent(event);
+  };
+
+  function resetDeltaBeforeAnim(element, index) {
+    element.boundingRect = element.element.getBoundingClientRect();
+    element.windowHeight = window.innerHeight;
+    element.deltaScrolling[index] = getDeltaScrolling(element, index);
+  };
+
+  function getScrollY(element) {
+    if(!element.scrollableElement) return window.scrollY;
+    return element.scrollableElement.scrollTop;
+  }
+
+  window.ScrollFx = ScrollFx;
+
+  var scrollFx = document.getElementsByClassName('js-scroll-fx');
+  for(var i = 0; i < scrollFx.length; i++) {
+    (function(i){
+      var scrollableElement = scrollFx[i].getAttribute('data-scrollable-element');
+      new ScrollFx(scrollFx[i], scrollableElement);
+    })(i);
+  }
 }());
 // File#: _1_side-navigation-v2
 // Usage: codyhouse.co/license
@@ -7055,6 +7636,199 @@ function resetFocusTabsStyle() {
     }
   };
 }());
+// File#: _2_draggable-img-gallery
+// Usage: codyhouse.co/license
+(function() {
+  var DragGallery = function(element) {
+    this.element = element;
+    this.list = this.element.getElementsByTagName('ul')[0];
+    this.imgs = this.list.children;
+    this.gestureHint = this.element.getElementsByClassName('drag-gallery__gesture-hint');// drag gesture hint
+    this.galleryWidth = getGalleryWidth(this); 
+    this.translate = 0; // store container translate value
+    this.dragStart = false; // start dragging position
+    // drag momentum option
+    this.dragMStart = false;
+    this.dragTimeMStart = false;
+    this.dragTimeMEnd = false;
+    this.dragMSpeed = false;
+    this.dragAnimId = false;
+    initDragGalleryEvents(this); 
+  };
+
+  function initDragGalleryEvents(gallery) {
+    initDragging(gallery); // init dragging
+
+    gallery.element.addEventListener('update-gallery-width', function(event){ // window resize
+      gallery.galleryWidth = getGalleryWidth(gallery); 
+      // reset translate value if not acceptable
+      checkTranslateValue(gallery);
+      setTranslate(gallery);
+    });
+     
+    if(intersectionObsSupported) initOpacityAnim(gallery); // init image animation
+
+    if(!reducedMotion && gallery.gestureHint.length > 0) initHintGesture(gallery); // init hint gesture element animation
+
+    initKeyBoardNav(gallery);
+  };
+
+  function getGalleryWidth(gallery) {
+    return gallery.list.scrollWidth - gallery.list.offsetWidth;
+  };
+
+  function initDragging(gallery) { // gallery drag
+    new SwipeContent(gallery.element);
+    gallery.element.addEventListener('dragStart', function(event){
+      window.cancelAnimationFrame(gallery.dragAnimId);
+      Util.addClass(gallery.element, 'drag-gallery--is-dragging'); 
+      gallery.dragStart = event.detail.x;
+      gallery.dragMStart = event.detail.x;
+      gallery.dragTimeMStart = new Date().getTime();
+      gallery.dragTimeMEnd = false;
+      gallery.dragMSpeed = false;
+      initDragEnd(gallery);
+    });
+
+    gallery.element.addEventListener('dragging', function(event){
+      if(!gallery.dragStart) return;
+      if(Math.abs(event.detail.x - gallery.dragStart) < 5) return;
+      gallery.translate = Math.round(event.detail.x - gallery.dragStart + gallery.translate);
+      gallery.dragStart = event.detail.x;
+      checkTranslateValue(gallery);
+      setTranslate(gallery);
+    });
+  };
+
+  function initDragEnd(gallery) {
+    gallery.element.addEventListener('dragEnd', function cb(event){
+      gallery.element.removeEventListener('dragEnd', cb);
+      Util.removeClass(gallery.element, 'drag-gallery--is-dragging');
+      initMomentumDrag(gallery); // drag momentum
+      gallery.dragStart = false;
+    });
+  };
+
+  function initKeyBoardNav(gallery) {
+    gallery.element.setAttribute('tabindex', 0);
+    // navigate gallery using right/left arrows
+    gallery.element.addEventListener('keyup', function(event){
+      if( event.keyCode && event.keyCode == 39 || event.key && event.key.toLowerCase() == 'arrowright' ) {
+        keyboardNav(gallery, 'right');
+      } else if(event.keyCode && event.keyCode == 37 || event.key && event.key.toLowerCase() == 'arrowleft') {
+        keyboardNav(gallery, 'left');
+      }
+    });
+  };
+
+  function keyboardNav(gallery, direction) {
+    var delta = parseFloat(window.getComputedStyle(gallery.imgs[0]).marginRight) + gallery.imgs[0].offsetWidth;
+    gallery.translate = (direction == 'right') ? gallery.translate - delta : gallery.translate + delta;
+    checkTranslateValue(gallery);
+    setTranslate(gallery);
+  };
+
+  function checkTranslateValue(gallery) { // make sure translate is in the right interval
+    if(gallery.translate > 0) {
+      gallery.translate = 0;
+      gallery.dragMSpeed = 0;
+    }
+    if(Math.abs(gallery.translate) > gallery.galleryWidth) {
+      gallery.translate = gallery.galleryWidth*-1;
+      gallery.dragMSpeed = 0;
+    }
+  };
+
+  function setTranslate(gallery) {
+    gallery.list.style.transform = 'translateX('+gallery.translate+'px)';
+    gallery.list.style.msTransform = 'translateX('+gallery.translate+'px)';
+  };
+
+  function initOpacityAnim(gallery) { // animate img opacities on drag
+    for(var i = 0; i < gallery.imgs.length; i++) {
+      var observer = new IntersectionObserver(opacityCallback.bind(gallery.imgs[i]), { threshold: [0, 0.1] });
+		  observer.observe(gallery.imgs[i]);
+    }
+  };
+
+  function opacityCallback(entries, observer) { // reveal images when they enter the viewport
+    var threshold = entries[0].intersectionRatio.toFixed(1);
+		if(threshold > 0) {
+      Util.addClass(this, 'drag-gallery__item--visible');
+      observer.unobserve(this);
+    }
+  };
+
+  function initMomentumDrag(gallery) {
+    // momentum effect when drag is over
+    if(reducedMotion) return;
+    var timeNow = new Date().getTime();
+    gallery.dragMSpeed = 0.95*(gallery.dragStart - gallery.dragMStart)/(timeNow - gallery.dragTimeMStart);
+
+    var currentTime = false;
+
+    function animMomentumDrag(timestamp) {
+      if (!currentTime) currentTime = timestamp;         
+      var progress = timestamp - currentTime;
+      currentTime = timestamp;
+      if(Math.abs(gallery.dragMSpeed) < 0.01) {
+        gallery.dragAnimId = false;
+        return;
+      } else {
+        gallery.translate = Math.round(gallery.translate + (gallery.dragMSpeed*progress));
+        checkTranslateValue(gallery);
+        setTranslate(gallery);
+        gallery.dragMSpeed = gallery.dragMSpeed*0.95;
+        gallery.dragAnimId = window.requestAnimationFrame(animMomentumDrag);
+      }
+    };
+
+    gallery.dragAnimId = window.requestAnimationFrame(animMomentumDrag);
+  };
+
+  function initHintGesture(gallery) { // show user a hint about gallery dragging
+    var observer = new IntersectionObserver(hintGestureCallback.bind(gallery.gestureHint[0]), { threshold: [0, 1] });
+		observer.observe(gallery.gestureHint[0]);
+  };
+
+  function hintGestureCallback(entries, observer) {
+    var threshold = entries[0].intersectionRatio.toFixed(1);
+		if(threshold > 0) {
+      Util.addClass(this, 'drag-gallery__gesture-hint--animate');
+      observer.unobserve(this);
+    }
+  };
+
+  //initialize the DragGallery objects
+  var dragGallery = document.getElementsByClassName('js-drag-gallery'),
+    intersectionObsSupported = ('IntersectionObserver' in window && 'IntersectionObserverEntry' in window && 'intersectionRatio' in window.IntersectionObserverEntry.prototype),
+    reducedMotion = Util.osHasReducedMotion();
+
+  if( dragGallery.length > 0 ) {
+    var dragGalleryArray = [];
+    for( var i = 0; i < dragGallery.length; i++) {
+      (function(i){ 
+        if(!intersectionObsSupported || reducedMotion) Util.addClass(dragGallery[i], 'drag-gallery--anim-off');
+        dragGalleryArray.push(new DragGallery(dragGallery[i]));
+      })(i);
+    }
+
+    // resize event
+    var resizingId = false,
+      customEvent = new CustomEvent('update-gallery-width');
+    
+    window.addEventListener('resize', function() {
+      clearTimeout(resizingId);
+      resizingId = setTimeout(doneResizing, 500);
+    });
+
+    function doneResizing() {
+      for( var i = 0; i < dragGalleryArray.length; i++) {
+        (function(i){dragGalleryArray[i].element.dispatchEvent(customEvent)})(i);
+      };
+    };
+  }
+}());
 // File#: _2_dropdown
 // Usage: codyhouse.co/license
 (function() {
@@ -8120,6 +8894,158 @@ function resetFocusTabsStyle() {
 			return (element.offsetWidth || element.offsetHeight || element.getClientRects().length);
 		};
 	}
+}());
+// File#: _2_menu-bar
+// Usage: codyhouse.co/license
+(function() {
+  var MenuBar = function(element) {
+    this.element = element;
+    this.items = Util.getChildrenByClassName(this.element, 'menu-bar__item');
+    this.mobHideItems = this.element.getElementsByClassName('menu-bar__item--hide');
+    this.moreItemsTrigger = this.element.getElementsByClassName('js-menu-bar__trigger');
+    initMenuBar(this);
+  };
+
+  function initMenuBar(menu) {
+    setMenuTabIndex(menu); // set correct tabindexes for menu item
+    initMenuBarMarkup(menu); // create additional markup
+    checkMenuLayout(menu); // set menu layout
+    Util.addClass(menu.element, 'menu-bar--loaded'); // reveal menu
+
+    // custom event emitted when window is resized
+    menu.element.addEventListener('update-menu-bar', function(event){
+      checkMenuLayout(menu);
+      if(menu.menuInstance) menu.menuInstance.toggleMenu(false, false); // close dropdown
+    });
+
+    // keyboard events 
+    // open dropdown when pressing Enter on trigger element
+    if(menu.moreItemsTrigger.length > 0) {
+      menu.moreItemsTrigger[0].addEventListener('keydown', function(event) {
+        if( (event.keyCode && event.keyCode == 13) || (event.key && event.key.toLowerCase() == 'enter') ) {
+          if(!menu.menuInstance) return;
+          menu.menuInstance.selectedTrigger = menu.moreItemsTrigger[0];
+          menu.menuInstance.toggleMenu(!Util.hasClass(menu.subMenu, 'menu--is-visible'), true);
+        }
+      });
+
+      // close dropdown on esc
+      menu.subMenu.addEventListener('keydown', function(event) {
+        if((event.keyCode && event.keyCode == 27) || (event.key && event.key.toLowerCase() == 'escape')) { // close submenu on esc
+          if(menu.menuInstance) menu.menuInstance.toggleMenu(false, true);
+        }
+      });
+    }
+    
+    // navigate menu items using left/right arrows
+    menu.element.addEventListener('keydown', function(event) {
+      if( (event.keyCode && event.keyCode == 39) || (event.key && event.key.toLowerCase() == 'arrowright') ) {
+        navigateItems(menu.items, event, 'next');
+      } else if( (event.keyCode && event.keyCode == 37) || (event.key && event.key.toLowerCase() == 'arrowleft') ) {
+        navigateItems(menu.items, event, 'prev');
+      }
+    });
+  };
+
+  function setMenuTabIndex(menu) { // set tabindexes for the menu items to allow keyboard navigation
+    var nextItem = false;
+    for(var i = 0; i < menu.items.length; i++ ) {
+      if(i == 0 || nextItem) menu.items[i].setAttribute('tabindex', '0');
+      else menu.items[i].setAttribute('tabindex', '-1');
+      if(i == 0 && menu.moreItemsTrigger.length > 0) nextItem = true;
+      else nextItem = false;
+    }
+  };
+
+  function initMenuBarMarkup(menu) {
+    if(menu.mobHideItems.length == 0 ) { // no items to hide on mobile - remove trigger
+      if(menu.moreItemsTrigger.length > 0) menu.element.removeChild(menu.moreItemsTrigger[0]);
+      return;
+    }
+
+    if(menu.moreItemsTrigger.length == 0) return;
+
+    // create the markup for the Menu element
+    var content = '';
+    menu.menuControlId = 'submenu-bar-'+Date.now();
+    for(var i = 0; i < menu.mobHideItems.length; i++) {
+      var item = menu.mobHideItems[i].cloneNode(true),
+        svg = item.getElementsByTagName('svg')[0],
+        label = item.getElementsByClassName('menu-bar__label')[0];
+
+      svg.setAttribute('class', 'icon menu__icon');
+      content = content + '<li role="menuitem"><span class="menu__content js-menu__content">'+svg.outerHTML+'<span>'+label.innerHTML+'</span></span></li>';
+    }
+
+    Util.setAttributes(menu.moreItemsTrigger[0], {'role': 'button', 'aria-expanded': 'false', 'aria-controls': menu.menuControlId, 'aria-haspopup': 'true'});
+
+    var subMenu = document.createElement('menu'),
+      customClass = menu.element.getAttribute('data-menu-class');
+    Util.setAttributes(subMenu, {'id': menu.menuControlId, 'class': 'menu js-menu '+customClass});
+    subMenu.innerHTML = content;
+    document.body.appendChild(subMenu);
+
+    menu.subMenu = subMenu;
+    menu.subItems = subMenu.getElementsByTagName('li');
+
+    menu.menuInstance = new Menu(menu.subMenu); // this will handle the dropdown behaviour
+  };
+
+  function checkMenuLayout(menu) { // switch from compressed to expanded layout and viceversa
+    var layout = getComputedStyle(menu.element, ':before').getPropertyValue('content').replace(/\'|"/g, '');
+    Util.toggleClass(menu.element, 'menu-bar--collapsed', layout == 'collapsed');
+  };
+
+  function navigateItems(list, event, direction, prevIndex) { // keyboard navigation among menu items
+    event.preventDefault();
+    var index = (typeof prevIndex !== 'undefined') ? prevIndex : Util.getIndexInArray(list, event.target),
+      nextIndex = direction == 'next' ? index + 1 : index - 1;
+    if(nextIndex < 0) nextIndex = list.length - 1;
+    if(nextIndex > list.length - 1) nextIndex = 0;
+    // check if element is visible before moving focus
+    (list[nextIndex].offsetParent === null) ? navigateItems(list, event, direction, nextIndex) : Util.moveFocus(list[nextIndex]);
+  };
+
+  function checkMenuClick(menu, target) { // close dropdown when clicking outside the menu element
+    if(menu.menuInstance && !menu.moreItemsTrigger[0].contains(target) && !menu.subMenu.contains(target)) menu.menuInstance.toggleMenu(false, false);
+  };
+
+  // init MenuBars objects
+  var menuBars = document.getElementsByClassName('js-menu-bar');
+  if( menuBars.length > 0 ) {
+    var j = 0,
+      menuBarArray = [];
+    for( var i = 0; i < menuBars.length; i++) {
+      var beforeContent = getComputedStyle(menuBars[i], ':before').getPropertyValue('content');
+      if(beforeContent && beforeContent !='' && beforeContent !='none') {
+        (function(i){menuBarArray.push(new MenuBar(menuBars[i]));})(i);
+        j = j + 1;
+      }
+    }
+    
+    if(j > 0) {
+      var resizingId = false,
+        customEvent = new CustomEvent('update-menu-bar');
+      // update Menu Bar layout on resize  
+      window.addEventListener('resize', function(event){
+        clearTimeout(resizingId);
+        resizingId = setTimeout(doneResizing, 150);
+      });
+
+      // close menu when clicking outside it
+      window.addEventListener('click', function(event){
+        menuBarArray.forEach(function(element){
+          checkMenuClick(element, event.target);
+        });
+      });
+
+      function doneResizing() {
+        for( var i = 0; i < menuBars.length; i++) {
+          (function(i){menuBars[i].dispatchEvent(customEvent)})(i);
+        };
+      };
+    }
+  }
 }());
 // File#: _2_modal-video
 // Usage: codyhouse.co/license
@@ -9500,6 +10426,245 @@ function resetFocusTabsStyle() {
 				closeOnClick(element, event.target);
 			});
 		});
+  }
+}());
+// File#: _3_lightbox
+// Usage: codyhouse.co/license
+
+(function() {
+  var Lightbox = function(element) {
+    this.element = element;
+    this.id = this.element.getAttribute('id');
+    this.slideshow = this.element.getElementsByClassName('js-lightbox__body')[0];
+    this.slides = this.slideshow.getElementsByClassName('js-slideshow__item');
+    this.thumbWrapper = this.element.getElementsByClassName('js-lightbox_thumb-list');
+    lazyLoadLightbox(this);
+    initSlideshow(this);
+    initThumbPreview(this);
+    initThumbEvents(this);
+  }
+
+  function lazyLoadLightbox(modal) {
+    // add no-transition class to lightbox - used to select the first visible slide
+    Util.addClass(modal.element, 'lightbox--no-transition');
+    //load first slide media when modal is open
+    modal.element.addEventListener('modalIsOpen', function(event){
+      setSelectedItem(modal, event);
+      var selectedSlide = modal.slideshow.getElementsByClassName('slideshow__item--selected');
+      modal.selectedSlide = Util.getIndexInArray(modal.slides, selectedSlide[0]);
+      if(selectedSlide.length > 0) {
+        if(modal.slideshowObj) modal.slideshowObj.selectedSlide = modal.selectedSlide;
+        lazyLoadSlide(modal);
+        resetVideos(modal, false);
+        resetIframes(modal, false);
+        updateThumb(modal);
+      }
+      Util.removeClass(modal.element, 'lightbox--no-transition');
+    });
+    modal.element.addEventListener('modalIsClose', function(event){ // add no-transition class
+      Util.addClass(modal.element, 'lightbox--no-transition');
+    });
+    // lazyload media of selected slide/prev slide/next slide
+    modal.slideshow.addEventListener('newItemSelected', function(event){
+      // 'newItemSelected' is emitted by the Slideshow object when a new slide is selected
+      var prevSelected = modal.selectedSlide;
+      modal.selectedSlide = event.detail;
+      lazyLoadSlide(modal);
+      resetVideos(modal, prevSelected); // pause video of previous visible slide and start new video (if present)
+      resetIframes(modal, prevSelected);
+      updateThumb(modal);
+    });
+  };
+
+  function lazyLoadSlide(modal) {
+    setSlideMedia(modal, modal.selectedSlide);
+    setSlideMedia(modal, modal.selectedSlide + 1);
+    setSlideMedia(modal, modal.selectedSlide - 1);
+  };
+
+  function setSlideMedia(modal, index) {
+    if(index < 0) index = modal.slides.length - 1;
+    if(index > modal.slides.length - 1) index = 0;
+    setSlideImgs(modal, index);
+    setSlidesVideos(modal, index, 'video');
+    setSlidesVideos(modal, index, 'iframe');
+  };
+
+  function setSlideImgs(modal, index) {
+    var imgs = modal.slides[index].querySelectorAll('img[data-src]');
+    for(var i = 0; i < imgs.length; i++) {
+      imgs[i].src = imgs[i].getAttribute('data-src');
+    }
+  };
+
+  function setSlidesVideos(modal, index, type) {
+    var videos = modal.slides[index].querySelectorAll(type+'[data-src]');
+    for(var i = 0; i < videos.length; i++) {
+      videos[0].src = videos[0].getAttribute('data-src');
+      videos[0].removeAttribute('data-src');
+    }
+  };
+
+  function initSlideshow(modal) { 
+    if(modal.slides.length <= 1) {
+      hideSlideshowElements(modal);
+      return;
+    } 
+    var swipe = (modal.slideshow.getAttribute('data-swipe') && modal.slideshow.getAttribute('data-swipe') == 'on') ? true : false;
+    modal.slideshowObj = new Slideshow({element: modal.slideshow, navigation: false, autoplay : false, swipe : swipe});
+  };
+
+  function hideSlideshowElements(modal) { // hide slideshow controls if gallery is composed by one item only
+    var slideshowNav = modal.element.getElementsByClassName('js-slideshow__control');
+    if(slideshowNav.length > 0) {
+      for(var i = 0; i < slideshowNav.length; i++) Util.addClass(slideshowNav[i], 'is-hidden');
+    }
+    var slideshowThumbs = modal.element.getElementsByClassName('js-lightbox_footer');
+    if(slideshowThumbs.length > 0) Util.addClass(slideshowThumbs[0], 'is-hidden');
+  };
+
+  function resetVideos(modal, index) {
+    if(index) {
+      var actualVideo = modal.slides[index].getElementsByTagName('video');
+      if(actualVideo.length > 0 ) actualVideo[0].pause();
+    }
+    var newVideo = modal.slides[modal.selectedSlide].getElementsByTagName('video');
+    if(newVideo.length > 0 ) {
+      setVideoWidth(modal, modal.selectedSlide, newVideo[0]);
+      newVideo[0].play();
+    }
+  };
+
+  function resetIframes(modal, index) {
+    if(index) {
+      var actualIframe = modal.slides[index].getElementsByTagName('iframe');
+      if(actualIframe.length > 0 ) {
+        actualIframe[0].setAttribute('data-src', actualIframe[0].src);
+        actualIframe[0].removeAttribute('src');
+      }
+    }
+    var newIframe = modal.slides[modal.selectedSlide].getElementsByTagName('iframe');
+    if(newIframe.length > 0 ) {
+      setVideoWidth(modal, modal.selectedSlide, newIframe[0]);
+    }
+  };
+
+  function resizeLightbox(modal) { // executed when window has been resized
+    if(!modal.selectedSlide) return; // modal not active
+    var video = modal.slides[modal.selectedSlide].getElementsByTagName('video');
+    if(video.length > 0 ) setVideoWidth(modal, modal.selectedSlide, video[0]);
+    var iframe = modal.slides[modal.selectedSlide].getElementsByTagName('iframe');
+    if(iframe.length > 0 ) setVideoWidth(modal, modal.selectedSlide, iframe[0]);
+  };
+
+  function setVideoWidth(modal, index, video) {
+    var videoContainer = modal.slides[index].getElementsByClassName('js-lightbox__media-outer');
+    if(videoContainer.length == 0 ) return;
+    var videoWrapper = videoContainer[0].getElementsByClassName('js-lightbox__media-inner');
+    var maxWidth = (video.offsetWidth/video.offsetHeight)*videoContainer[0].offsetHeight;
+    if(maxWidth < modal.slides[index].offsetWidth) {
+      videoWrapper[0].style.width = maxWidth+'px';
+      videoWrapper[0].style.paddingBottom = videoContainer[0].offsetHeight+'px';
+    } else {
+      videoWrapper[0].removeAttribute('style')
+    }
+  };
+
+  function initThumbPreview(modal) {
+    if(modal.thumbWrapper.length < 1) return;
+    var content = '';
+    for(var i = 0; i < modal.slides.length; i++) {
+      var activeClass = Util.hasClass(modal.slides[i], 'slideshow__item--selected') ? ' lightbox__thumb--active': '';
+      content = content + '<li class="lightbox__thumb js-lightbox__thumb'+activeClass+'"><img src="'+modal.slides[i].querySelector('[data-thumb]').getAttribute('data-thumb')+'">'+'</li>';
+    }
+    modal.thumbWrapper[0].innerHTML = content;
+  };
+
+  function initThumbEvents(modal) {
+    if(modal.thumbWrapper.length < 1) return;
+    modal.thumbSlides = modal.thumbWrapper[0].getElementsByClassName('js-lightbox__thumb');
+    modal.thumbWrapper[0].addEventListener('click', function(event){
+      var selectedThumb = event.target.closest('.js-lightbox__thumb');
+      if(!selectedThumb || Util.hasClass(selectedThumb, 'lightbox__thumb--active')) return;
+      modal.slideshowObj.showItem(Util.getIndexInArray(modal.thumbSlides, selectedThumb));
+    });
+  };
+
+  function updateThumb(modal) {
+    if(modal.thumbWrapper.length < 1) return;
+    // update selected thumb classes
+    var selectedThumb = modal.thumbWrapper[0].getElementsByClassName('lightbox__thumb--active');
+    if(selectedThumb.length > 0) Util.removeClass(selectedThumb[0], 'lightbox__thumb--active');
+    Util.addClass(modal.thumbSlides[modal.selectedSlide], 'lightbox__thumb--active');
+    // update thumb list position (if selected thumb is outside viewport)
+    var offsetThumb = modal.thumbSlides[modal.selectedSlide].getBoundingClientRect(),
+      offsetThumbList = modal.thumbWrapper[0].getBoundingClientRect();
+    if(offsetThumb.left < offsetThumbList.left) {
+      modal.thumbWrapper[0].scrollTo(modal.thumbSlides[modal.selectedSlide].offsetLeft - offsetThumbList.left, 0);
+    } else if(offsetThumb.right > offsetThumbList.right) {
+      modal.thumbWrapper[0].scrollTo( (offsetThumb.right - offsetThumbList.right) + modal.thumbWrapper[0].scrollLeft, 0);
+    }
+  };
+
+  function keyboardNavigateLightbox(modal, direction) {
+    if(!Util.hasClass(modal.element, 'modal--is-visible')) return;
+    if(!document.activeElement.closest('.js-lightbox__body') && document.activeElement.closest('.js-modal')) return
+    (direction == 'next') ? modal.slideshowObj.showNext() : modal.slideshowObj.showPrev();
+  };
+
+  function setSelectedItem(modal, event) {
+    // if a specific slide was selected -> make sure to show that item first
+    var selectedItemId = false;
+    if(event.detail) {
+      var elTarget = event.detail.closest('[aria-controls="'+modal.id+'"]');
+      if(elTarget) selectedItemId = elTarget.getAttribute('data-lightbox-item');
+    } 
+   
+    if(!selectedItemId || !modal.slideshowObj) return;
+    var selectedItem = document.getElementById(selectedItemId);
+    if(!selectedItem) return;
+    var lastSelected = modal.slideshow.getElementsByClassName('slideshow__item--selected');
+    if(lastSelected.length > 0 ) Util.removeClass(lastSelected[0], 'slideshow__item--selected');
+    Util.addClass(selectedItem, 'slideshow__item--selected');
+  };
+
+  window.Lightbox = Lightbox;
+
+  // init Lightbox objects
+  var lightBoxes = document.getElementsByClassName('js-lightbox');
+  if( lightBoxes.length > 0 ) {
+    var lightBoxArray = [];
+    for( var i = 0; i < lightBoxes.length; i++) {
+      (function(i){ lightBoxArray.push(new Lightbox(lightBoxes[i]));})(i);
+      
+      // resize video/iframe
+      var resizingId = false;
+      window.addEventListener('resize', function(event){
+        clearTimeout(resizingId);
+        resizingId = setTimeout(doneResizing, 300);
+      });
+
+      function doneResizing() {
+        for( var i = 0; i < lightBoxArray.length; i++) {
+          (function(i){resizeLightbox(lightBoxArray[i]);})(i);
+        };
+      };
+
+      // Lightbox gallery navigation with keyboard
+      window.addEventListener('keydown', function(event){
+        if(event.keyCode && event.keyCode == 39 || event.key && event.key.toLowerCase() == 'arrowright') {
+          updateLightbox('next');
+        } else if(event.keyCode && event.keyCode == 37 || event.key && event.key.toLowerCase() == 'arrowleft') {
+          updateLightbox('prev');
+        }
+      });
+
+      function updateLightbox(direction) {
+        for( var i = 0; i < lightBoxArray.length; i++) {
+          (function(i){keyboardNavigateLightbox(lightBoxArray[i], direction);})(i);
+        };
+      };
+    }
   }
 }());
 // File#: _3_mega-site-navigation
