@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Bass Therapy </title>
+
+
+</head>
+
+<body>
+  <!-- partial:index.partial.html -->
+  <div id="Allin">
+    <canvas id='snow'></canvas>
+
+    <!-- Banner -->
+    <video id="myVideo" width="300" height="50" autoplay muted onclick="window.open('https://soundcloud.com/unnecessary-roughness-yyc' );
+window.open('https://soundcloud.com/unnecessary-roughness-yyc' ');" href="#">
+      <source border="0" alt="" scrolling="no" allowtransparency="true"
+        src="https://aviramdayan-dreamelodic.ml/1.AviramPublicDownloads/Codes-General/Aviram_Dayan_DreaMelodiC_AD-DM-1280X214.webm"
+        width="300" height="50" type="video/webm">
+    </video>
+    <!-- ====== -->
+
+
+    <!-- SoundCloud -->
+    <iframe id="soundcloud_iframe" width="100%" height="260" scrolling="no" frameborder="no" allow="autoplay"
+      src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/playlists/1246040254&color=%23ff0000&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false&visual=true">
+
+    </iframe>
+
+  </div>
+
+
+
+
+  <style>
+    #Allin {
+      box-sizing: border-box;
+      display: block;
+      position: absolute;
+      opacity: 0.9;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 3;
+      margin: 0 auto;
+      border: 10px solid rgba(0, 0, 0, 0);
+      min-width: 500px;
+      max-width: 500px;
+
+
+      overflow-x: hidden;
+      overflow-y: hidden;
+
+      /*
+      border-bottom-left-radius: 5px;
+      border-bottom-right-radius: 5px;
+      */
+
+      -webkit-box-shadow: 13px 31px 52px -19px rgba(0, 0, 0, 0.75);
+      -moz-box-shadow: 13px 31px 52px -19px rgba(0, 0, 0, 0.75);
+      box-shadow: 13px 31px 52px -19px rgba(0, 0, 0, 0.75);
+      /*background: #000;*/
+
+    }
+
+
+
+
+
+    /* ---Snow--- */
+
+    #snow {
+      display: none;
+    }
+
+
+
+
+    canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 1;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+    }
+
+    .holder {
+      float: left;
+      width: 100%;
+      height: 100%;
+      perspective: 1000px;
+      position: relative;
+
+      img {
+        width: 50%;
+        position: relative;
+        top: 50%;
+        float: left;
+        margin: -150px 25% 50px 25%;
+        -webkit-box-shadow: 0px 0px 18px 0px rgba(0, 0, 0, 0.75);
+        -moz-box-shadow: 0px 0px 18px 0px rgba(0, 0, 0, 0.75);
+        box-shadow: 0px 0px 18px 0px rgba(0, 0, 0, 0.75);
+        // transform: rotateY(25deg);
+
+
+      }
+    }
+
+    /* ------------- */
+  </style>
+
+
+
+  <script>
+
+    // Snow: https://codepen.io/otsukatomoya/pen/gbDxF/
+
+    var w = window.innerWidth,
+      h = window.innerHeight,
+      canvas = document.getElementById('snow'),
+      ctx = canvas.getContext('2d'),
+      rate = 50,
+      amountOfSnow = 50,
+      time,
+      count,
+      size = 2,
+      speed = 10,
+      lights = new Array,
+      colors = ['#eee'];
+
+    canvas.setAttribute('width', w);
+    canvas.setAttribute('height', h);
+
+    function init() {
+      time = 0;
+      count = 0;
+
+      for (var i = 0; i < amountOfSnow; i++) {
+        lights[i] = {
+          x: Math.ceil(Math.random() * w),
+          y: Math.ceil(Math.random() * h),
+          toX: Math.random() * 5 + 1,
+          toY: Math.random() * 5 + 1,
+          c: colors[Math.floor(Math.random() * colors.length)],
+          size: Math.random() * size
+        }
+      }
+    }
+
+    function bubble() {
+      ctx.clearRect(0, 0, w, h);
+
+      for (var i = 0; i < amountOfSnow; i++) {
+        var li = lights[i];
+
+        ctx.beginPath();
+        ctx.arc(li.x, li.y, li.size, 0, Math.PI * 2, false);
+
+
+        //
+        // general color of snow
+        // White color is  (215, 117, 44, 0.9)
+        //
+
+        ctx.fillStyle = 'rgba(220, 151, 44, 1)';
+
+        //
+        //
+        //
+
+
+        ctx.fill();
+
+        li.x = li.x + li.toX * (time * 0.05);
+        li.y = li.y + li.toY * (time * 0.05);
+
+        if (li.x > w) { li.x = 0; }
+        if (li.y > h) { li.y = 0; }
+        if (li.x < 0) { li.x = w; }
+        if (li.y < 0) { li.y = h; }
+      }
+      if (time < speed) {
+        time++;
+      }
+      timerID = setTimeout(bubble, 500 / rate);
+    }
+    init();
+    bubble();
+
+
+    jQuery(function ($) {
+      var currentMousePos = { x: -1, y: -1 };
+      $('.holder').mousemove(function (event) {
+        currentMousePos.x = event.pageX;
+        currentMousePos.y = event.pageY;
+
+        var getOffset = $('img').offset();
+        var getWidth = $('img').width() / 2;
+        var getHeight = $('img').height() / 2;
+        var centerX = getOffset.left + getWidth;
+        var centerY = getOffset.top + getHeight;
+
+        var rotateAmountX = (currentMousePos.x - centerX) * 0.000001;
+        var rotateAmountY = (currentMousePos.y - centerY) * 0.000001;
+
+        if (rotateAmountX > 0.0002) { rotateAmountX = 0.0002; }
+        if (rotateAmountX < -0.0002) { rotateAmountX = -0.0002; }
+        if (rotateAmountY > 0.0003) { rotateAmountY = 0.0003; }
+        if (rotateAmountY < -0.0003) { rotateAmountY = -0.0003; }
+
+        // console.log(rotateAmountX +', ' +rotateAmountY);
+        $('img').css('transform', 'matrix3d(1,0,0.00,' + rotateAmountX + ',0.00,1,0.00,' + rotateAmountY + ',0,0,1,0,0,0,0,1)');
+
+
+      });
+
+
+    });
+
+
+    $(document).ready(function () {
+      centerImage();
+    });
+
+    var resizeTimer;
+    $(window).on('resize', function (e) {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(function () {
+        centerImage();
+      }, 250);
+    });
+
+    function centerImage() {
+      var margTop = $('.holder img').height() / 2;
+      $('.holder img').css('margin-top', '-' + margTop + 'px');
+    }
+
+  </script>
+
+
+
+
+  <script>
+    /*hide the "controls" - play/pause */
+    var x = document.getElementById("myVideo");
+    function disableControls() {
+      x.controls = false;
+      x.load();
+    }
+  </script>
+  <!-- partial -->
+
+</body>
+
+</html>

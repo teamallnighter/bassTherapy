@@ -80,8 +80,29 @@
             </a>
             <ul class="f-header__dropdown">
               <li><a class="dropdown__item" href="#0">Stream</a></li>
-              <li><a class="dropdown__item" href="#0">Music</a></li>
-              <li><a class="dropdown__item" href="#0">Blog</a></li>
+
+              <li>
+                <a href="/player.html" class="dropdown__item" onclick="window.open(this.href, 'targetWindow',
+                                   `toolbar=no,
+                                    location=no,
+                                    status=no,
+                                    menubar=no,
+                                    scrollbars=yes,
+                                    resizable=yes,
+                                    width=800,
+                                    height=1000`);
+                                    return false;">Music</a>
+                <a href="https://blog.basstherapy.tv" class="dropdown__item" onclick="window.open(this.href,'targetWindow',
+                                   `toolbar=no,
+                                    location=no,
+                                    status=no,
+                                    menubar=no,
+                                    scrollbars=yes,
+                                    resizable=yes,
+                                    width=800,
+                                    height=1000`);
+                                    return false;">Blog</a>
+              </li>
             </ul>
           </li>
           <li class="f-header__item"><a href="../artists/index.html" class="f-header__link">Artists</a></li>
@@ -201,9 +222,7 @@
       </div>
     </section>
   </section>
-  <div class="seperator-wrapper">
-    <img src="assets/media/img/WAVEFORM2.svg" />
-  </div>
+
   <section class="position-relative z-index-1 min-height-100vh padding-y-xxl flex flex-center our-team">
     <div class="position-relative z-index-1 container max-width-xxl">
       <section class="position-relative padding-y-xxxl bg js-cha-section">
@@ -336,9 +355,7 @@
       </svg>
     </div>
   </section>
-  <div class="seperator-wrapper">
-    <img src="assets/media/img/WAVEFORM1.svg" />
-  </div>
+
   <section class="testimonial position-relative z-index-1 padding-y-xxl demo-theme-dark" id="mission">
     <div class="container max-width-adaptive-sm">
       <div class="margin-bottom-lg">
@@ -385,7 +402,7 @@
         <ul class="footer-v4__nav-list">
           <li class="footer-v4__nav-item"><a href="#about-us">About Us</a></li>
           <li class="footer-v4__nav-item"><a href="#0">Resources</a></li>
-          <li class="footer-v4__nav-item"><a href="#0">Artists</a></li>
+          <li class="footer-v4__nav-item"><a href="https://blog.basstherapy.tv">Blog</a></li>
           <li class="footer-v4__nav-item"><a href="#0">Content</a></li>
           <li class="footer-v4__nav-item"><a href="#0">Contact Us</a></li>
           <li class="footer-v4__nav-item"><a href="#0">Get Help Now</a></li>
